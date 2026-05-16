@@ -1,0 +1,51 @@
+CONFIG set sysvshm=new
+RESTART
+
+ARG APP_DIR=/srv/nextcloud/webroot
+ARG DATA_DIR=/srv/nextcloud/data
+
+ARG NC_VERSION="28.0.1"
+
+ARG PG_VERSION=15
+ARG PG_USER=admin
+ARG PG_PASSWORD=admin-password
+
+ARG DB_NAME=nextcloud
+ARG DB_DIR=/srv/nextcloud/database
+ARG DB_USER=nextcloud
+ARG DB_PASSWORD=nextcloud-password
+
+CMD mkdir -p /usr/local/www/nextcloud
+MOUNT ${APP_DIR} /usr/local/www/nextcloud nullfs rw 0 0
+CMD mkdir -p /mnt/data
+MOUNT ${DATA_DIR} /mnt/data nullfs rw 0 0
+CMD mkdir -p /var/db/postgres
+MOUNT ${DB_DIR} /var/db/postgres nullfs rw 0 0
+
+PKG ca_root_nss ffmpeg htop nginx php82 php82-bcmath php82-bz2 php82-ctype php82-curl php82-dom php82-exif php82-fileinfo php82-filter php82-ftp php82-gd php82-gmp php82-iconv php82-intl php82-ldap php82-mbstring php82-opcache php82-pcntl php82-pdo php82-pdo_mysql php82-pdo_pgsql php82-pecl-APCu php82-pecl-imagick php82-pecl-redis php82-pecl-smbclient php82-phar php82-posix php82-session php82-simplexml php82-sysvsem php82-xml php82-xmlreader php82-xmlwriter php82-xsl php82-zip php82-zlib postgresql${PG_VERSION}-server redis sudo
+
+CMD chown www:www /mnt/data
+CMD chown -Rfh postgres:postgres /var/db/postgres
+
+SYSRC postgresql_enable=YES
+CMD if [ ! -e /var/db/postgres/data${PG_VERSION} ];then service postgresql initdb; service postgresql start; fi
+CMD echo 'host    all             all             all                     md5' >> /var/db/postgres/data${PG_VERSION}/pg_hba.conf
+SERVICE postgresql restart
+CMD sudo -u postgres psql -c "CREATE ROLE ${PG_USER} WITH SUPERUSER LOGIN ENCRYPTED PASSWORD '${PG_PASSWORD}'"
+CMD sudo -u postgres psql -c "CREATE ROLE ${DB_USER} WITH CREATEDB LOGIN ENCRYPTED PASSWORD '${DB_PASSWORD}'"
+CMD sudo -u postgres psql -c "CREATE DATABASE ${DB_NAME} WITH ENCODING UTF8 OWNER ${DB_USER}"
+
+CMD fetch https://download.nextcloud.com/server/releases/nextcloud-${NC_VERSION}.tar.bz2 -o /usr/local/www/nextcloud.tar.bz2
+CMD tar -x -j -k -f /usr/local/www/nextcloud.tar.bz2 -C /usr/local/www
+CMD rm -f /usr/local/www/nextcloud.tar.bz2
+
+CP usr /
+CMD chown -Rfh www:www /usr/local/www/nextcloud
+
+SYSRC redis_enable=YES
+SYSRC php_fpm_enable=YES
+SYSRC nginx_enable=YES
+
+SERVICE redis start
+SERVICE php-fpm start
+SERVICE nginx start
