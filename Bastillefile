@@ -54,5 +54,5 @@ SYSRC php_fpm_enable=YES
 SYSRC nginx_enable=YES
 
 SERVICE redis start
-SERVICE php-fpm start
+SERVICE php_fpm start
 SERVICE nginx start
