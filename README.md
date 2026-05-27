@@ -51,28 +51,12 @@ Therefore you need to configure the parts yourself.
 This program is distributed under 3-Clause BSD license. See the file
 [LICENSE](LICENSE) for details.
 
-## Bootstrap
-
-So far bastille only supports downloading from GitHub or GitLab, so you have
-to fetch the template manually:
-
-```
-# mkdir <your-bastille-template-dir>/wegtam
-# git -C <your-bastille-template-dir>/wegtam clone https://codeberg.org/wegtam/bastille-nextcloud.git
-```
-
 ## Usage
 
-### 1. Install the default version into a jail
-
 ```
-# bastille template TARGET wegtam/bastille-nextcloud
-```
-
-### 2. Install with custom settings
-
-```
-# bastille template TARGET wegtam/bastille-nextcloud \
+bastille create nextcloud 14.4-RELEASE YourIP-Bastille
+bastille bootstrap https://github.com/bastille-templates/nextcloud
+bastille template nextcloud bastille-templates/nextcloud \
   --arg APP_DIR=/mnt/nextcloud --arg DATA_DIR=/mnt/data \
   --arg DB_DIR=/opt/postgresql/data \
   --arg DB_NAME=nextcloud --arg DB_USER=nextcloud \

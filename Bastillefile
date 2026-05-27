@@ -1,4 +1,6 @@
-CONFIG set sysvshm=new
+PKG bash
+CMD chsh -s /bin/bash root
+CONFIG set sysvshm new
 RESTART
 
 ARG APP_DIR=/srv/nextcloud/webroot
@@ -22,7 +24,8 @@ MOUNT ${DATA_DIR} /mnt/data nullfs rw 0 0
 CMD mkdir -p /var/db/postgres
 MOUNT ${DB_DIR} /var/db/postgres nullfs rw 0 0
 
-PKG ca_root_nss ffmpeg htop nginx php82 php82-bcmath php82-bz2 php82-ctype php82-curl php82-dom php82-exif php82-fileinfo php82-filter php82-ftp php82-gd php82-gmp php82-iconv php82-intl php82-ldap php82-mbstring php82-opcache php82-pcntl php82-pdo php82-pdo_mysql php82-pdo_pgsql php82-pecl-APCu php82-pecl-imagick php82-pecl-redis php82-pecl-smbclient php82-phar php82-posix php82-session php82-simplexml php82-sysvsem php82-xml php82-xmlreader php82-xmlwriter php82-xsl php82-zip php82-zlib postgresql${PG_VERSION}-server redis sudo
+PKG ca_root_nss ffmpeg htop nginx php82 php82-{fpm,bcmath,bz2,ctype,curl,dom,exif,fileinfo,filter,ftp,gd,gmp,iconv,intl,ldap,mbstring,opcache,pcntl,pdo,pdo_mysql,pdo_pgsql,pecl-APCu,pecl-imagick,pecl-redis,pecl-smbclient,phar,posix,session,simplexml,sysvsem,xml,xmlreader,xmlwriter,xsl,zip,zlib} \
+    postgresql${PG_VERSION}-server redis sudo
 
 CMD chown www:www /mnt/data
 CMD chown -Rfh postgres:postgres /var/db/postgres
