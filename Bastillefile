@@ -1,5 +1,5 @@
 PKG bash
-CMD chsh -s /bin/bash root
+CMD chsh -s /usr/local/bin/bash root
 CONFIG set sysvshm new
 RESTART
 
