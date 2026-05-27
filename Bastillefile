@@ -24,7 +24,7 @@ MOUNT ${DATA_DIR} /mnt/data nullfs rw 0 0
 CMD mkdir -p /var/db/postgres
 MOUNT ${DB_DIR} /var/db/postgres nullfs rw 0 0
 
-PKG ca_root_nss ffmpeg htop nginx php82 php82-{fpm,bcmath,bz2,ctype,curl,dom,exif,fileinfo,filter,ftp,gd,gmp,iconv,intl,ldap,mbstring,opcache,pcntl,pdo,pdo_mysql,pdo_pgsql,pecl-APCu,pecl-imagick,pecl-redis,pecl-smbclient,phar,posix,session,simplexml,sysvsem,xml,xmlreader,xmlwriter,xsl,zip,zlib} \
+PKG ca_root_nss ffmpeg htop nginx php82 php82-{bcmath,bz2,ctype,curl,dom,exif,fileinfo,filter,ftp,gd,gmp,iconv,intl,ldap,mbstring,opcache,pcntl,pdo,pdo_mysql,pdo_pgsql,pecl-APCu,pecl-imagick,pecl-redis,pecl-smbclient,phar,posix,session,simplexml,sysvsem,xml,xmlreader,xmlwriter,xsl,zip,zlib} \
     postgresql${PG_VERSION}-server redis sudo
 
 CMD chown www:www /mnt/data
